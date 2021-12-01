@@ -1,4 +1,4 @@
-from calendarBot import *
+from calendar_bot import *
 client = CalendarBot()
 with open('calendar_lunar_day_name.txt','r') as f:
     dmap = dict()
@@ -23,7 +23,7 @@ ans = [
        ]
 errors = []
 for idx, (expected, date) in enumerate(ans):
-    curr = client.get_lunar_day_name(client.get_lunar_day_idx(client.get_date(date)))
+    curr = client.get_lunar_day_name(client.get_lunar_day_idx(date))
     print('expected',expected)
     if expected != curr:
         print('*************   '+date)
