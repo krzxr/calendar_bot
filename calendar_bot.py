@@ -9,7 +9,7 @@ import bisect
 from dateutil import parser
 
 # provided: read in the discord token
-with open('calendar_bot.txt','r') as f:
+with open('discord_token.txt','r') as f:
     DISCORD_TOKEN = f.readline().strip()
 
 # provided: variables
