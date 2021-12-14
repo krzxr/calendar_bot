@@ -57,16 +57,16 @@ def get_date(msg):
 
 # provided: read in mahina calendar info
 def warm_up():
-    with open('calendar_special_day.txt','r') as f:
+    with open('mahina_calendar_special_day.txt','r') as f:
         for line in f:
             date = get_date(line.strip())
             special_days.append(date)
-    with open('calendar_mahina_day_name.txt','r') as f:
+    with open('mahina_calendar_day_name.txt','r') as f:
         for line in f:
             name, date = line.strip().split()
             mahina_day.append(name)
     
-    with open('calendar_mahina_day_info.txt','r') as f:
+    with open('mahina_calendar_day_info.txt','r') as f:
         for line in f:
             date, *info = line.strip().split()
             info = ' '.join(info)

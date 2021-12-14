@@ -12,18 +12,17 @@ from dateutil import parser
 with open('discord_token.txt','r') as f:
     DISCORD_TOKEN = f.readline().strip()
 
-# provided: variables
+# provided: 
 start_date = parser.parse('1/1/2021')
-start_date_mahina_idx = 19 - 1
-mahina_day = []
-mahina_day_info = []
+start_date_lunar_idx = 19 - 1
+date_to_lunar_day = []
+date_to_lunar_day_info = []
 special_days = []
 
-#####################  TO DO #######################################
 # word to wake up the bot
 expected_activation_word = 'calendar'
 
-# create a reply given message content and the sender of the message
+
 def make_reply( msg_content,user_name):
     activation_len = len(expected_activation_word)
     if len(msg_content)<activation_len:
@@ -37,33 +36,24 @@ def make_reply( msg_content,user_name):
     if task_word.lower() == 'aloha':
         reply = 'Aloha e ' + user_name + '!'
     elif is_date(task_word):
-        mahina_day_idx = get_mahina_day_idx(task_word)
-        mahina_day_name = mahina_day[lunar_day_idx]
-        mahina_day_info = mahina_day_info[lunar_day_idx]
+        lunar_day_idx = get_lunar_day_idx(task_word)
+        lunar_day_name = date_to_lunar_day[lunar_day_idx]
+        lunar_day_info = date_to_lunar_day_info[lunar_day_idx]
         reply = task_word + ' is ' + lunar_day_name + ': '+lunar_day_info
         
     else:
         reply = 'Aloha, I am the calendar bot'
     return reply
+# provided
+def get_lunar_day_idx(date):
+    date = parser.parse(date)
+    left_idx = bisect.bisect_left(special_days, start_date)    
+    right_idx = bisect.bisect_right(special_days, date) 
+    day_diff = (date-start_date).days+(right_idx - left_idx)+start_date_lunar_idx
+    lunar_day_idx = day_diff % 30
+    return lunar_day_idx
 
-# find mahina day
-def get_mahina_day_idx(curr_date):
-    curr_date = parser.parse(curr_date)
-    num_sd_bef_start = 0
-    num_sd_bef_curr = 0
-    for special_day in special_days:
-        if special_day <= start_date:
-            num_sd_bef_start += 1
-        if special_day <= curr_date:
-            num_sd_bef_curr += 1
-    day_diff = (curr_date-start_date).days+start_date_mahina_idx+num_sd_bef_curr - num_sd_bef_start
-    mahina_day_idx = day_diff % 30
-    return mahina_day_idx
-
-####################################################################
-
-
-# provided: determine if a string is a date, and parse the date
+# provided:
 def is_date(msg):
     try:
         date = parser.parse(msg)
@@ -73,26 +63,23 @@ def is_date(msg):
 def get_date(msg):
     date = parser.parse(msg)
     return date
-
-# provided: read in mahina calendar info
 def warm_up():
-    with open('mahina_calendar_special_day.txt','r') as f:
+    with open('calendar_special_day.txt','r') as f:
         for line in f:
             date = get_date(line.strip())
             special_days.append(date)
-    with open('mahina_calendar_day_name.txt','r') as f:
+    with open('calendar_lunar_day_name.txt','r') as f:
         for line in f:
             name, date = line.strip().split()
-            mahina_day.append(name)
+            date_to_lunar_day.append(name)
     
-    with open('mahina_calendar_day_info.txt','r') as f:
+    with open('calendar_lunar_day_info.txt','r') as f:
         for line in f:
             date, *info = line.strip().split()
             info = ' '.join(info)
-            mahina_day_info.append(info)
-
-# provided: discord bot
+            date_to_lunar_day_info.append(info)
 class CalendarBot(discord.Client):
+        
     async def on_ready(self):
         # Runs when successfully connected to the server
         print('Logged on as', self.user)
