@@ -14,9 +14,9 @@ with open('discord_token.txt','r') as f:
 
 # provided: variables
 start_date = parser.parse('1/1/2021')
-start_date_lunar_idx = 19 - 1
-date_to_lunar_day = []
-date_to_lunar_day_info = []
+start_date_mahina_idx = 19 - 1
+mahina_day = []
+mahina_day_info = []
 special_days = []
 
 #####################  TO DO #######################################
@@ -25,18 +25,24 @@ expected_activation_word = 'calendar'
 
 # create a reply given message content and the sender of the message
 def make_reply( msg_content,user_name):
-    pass
+    return 'aloha!'
+
+# find mahina day
+def get_mahina_day_idx(curr_date):
+    curr_date = parser.parse(curr_date)
+    num_sd_bef_start = 0
+    num_sd_bef_curr = 0
+    for special_day in special_days:
+        if special_day < start_date:
+            num_sd_bef_start += 1
+        if special_day < curr_date:
+            num_sd_bef_curr += 1
+    day_diff = (date-start_date).days+start_date_mahina_idx+num_sd_bef_curr - num_sd_bef_start
+    mahina_day_idx = day_diff % 30
+    return mahina_day_idx
+
 ####################################################################
 
-
-# provided: find lunar day
-def get_lunar_day_idx(date):
-    date = parser.parse(date)
-    left_idx = bisect.bisect_left(special_days, start_date)    
-    right_idx = bisect.bisect_right(special_days, date) 
-    day_diff = (date-start_date).days+(right_idx - left_idx)+start_date_lunar_idx
-    lunar_day_idx = day_diff % 30
-    return lunar_day_idx
 
 # provided: determine if a string is a date, and parse the date
 def is_date(msg):
@@ -49,22 +55,22 @@ def get_date(msg):
     date = parser.parse(msg)
     return date
 
-# provided: read in lunar calendar info
+# provided: read in mahina calendar info
 def warm_up():
     with open('calendar_special_day.txt','r') as f:
         for line in f:
             date = get_date(line.strip())
             special_days.append(date)
-    with open('calendar_lunar_day_name.txt','r') as f:
+    with open('calendar_mahina_day_name.txt','r') as f:
         for line in f:
             name, date = line.strip().split()
-            date_to_lunar_day.append(name)
+            mahina_day.append(name)
     
-    with open('calendar_lunar_day_info.txt','r') as f:
+    with open('calendar_mahina_day_info.txt','r') as f:
         for line in f:
             date, *info = line.strip().split()
             info = ' '.join(info)
-            date_to_lunar_day_info.append(info)
+            mahina_day_info.append(info)
 
 # provided: discord bot
 class CalendarBot(discord.Client):
