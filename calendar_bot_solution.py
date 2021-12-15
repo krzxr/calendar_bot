@@ -26,24 +26,20 @@ expected_activation_word = 'calendar'
 # create a reply given message content and the sender of the message
 def make_reply( msg_content,user_name):
     activation_len = len(expected_activation_word)
-    if len(msg_content)<activation_len:
-        return ''
     activation_word = msg_content[:activation_len]
     task_word = msg_content[activation_len+1:]
 
     if activation_word != expected_activation_word:
         return ''
     
-    if task_word.lower() == 'aloha':
-        reply = 'Aloha e ' + user_name + '!'
-    elif is_date(task_word):
+    if is_date(task_word):
         mahina_day_idx = get_mahina_day_idx(task_word)
         mahina_day_name = mahina_day[lunar_day_idx]
         mahina_day_info = mahina_day_info[lunar_day_idx]
         reply = task_word + ' is ' + lunar_day_name + ': '+lunar_day_info
         
     else:
-        reply = 'Aloha, I am the calendar bot'
+        reply = 'Aloha e ' + user_name + '!'
     return reply
 
 # find mahina day
