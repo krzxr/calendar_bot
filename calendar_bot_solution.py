@@ -34,8 +34,8 @@ def make_reply( msg_content,user_name):
     
     if is_date(task_word):
         mahina_day_idx = get_mahina_day_idx(task_word)
-        mahina_day_name = mahina_day[lunar_day_idx]
-        mahina_day_info = mahina_day_info[lunar_day_idx]
+        mahina_day_name = mahina_day[mahina_day_idx]
+        mahina_day_info = mahina_day_info[mahina_day_idx]
         reply = task_word + ' is ' + mahina_day_name + ': '+ mahina_day_info
         
     else:
