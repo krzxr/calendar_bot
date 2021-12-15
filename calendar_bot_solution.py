@@ -15,8 +15,8 @@ with open('discord_token.txt','r') as f:
 # provided: variables
 start_date = parser.parse('1/1/2021')
 start_date_mahina_idx = 19 - 1
-mahina_day = []
-mahina_day_info = []
+mahina_day_names = []
+mahina_day_infos = []
 special_days = []
 
 #####################  TO DO #######################################
@@ -33,10 +33,10 @@ def make_reply( msg_content,user_name):
         return ''
     
     if is_date(task_word):
-        mahina_day_idx = get_mahina_day_idx(task_word)
-        mahina_day_name = mahina_day[mahina_day_idx]
-        mahina_day_info = mahina_day_info[mahina_day_idx]
-        reply = task_word + ' is ' + mahina_day_name + ': '+ mahina_day_info
+        curr_idx = get_mahina_day_idx(task_word)
+        curr_name = mahina_day_names[curr_idx]
+        curr_info = mahina_day_infos[curr_idx]
+        reply = task_word + ' is ' + curr_name + ': '+ curr_info
         
     else:
         reply = 'Aloha e ' + user_name + '!'
@@ -79,13 +79,13 @@ def warm_up():
     with open('mahina_calendar_day_name.txt','r') as f:
         for line in f:
             name, date = line.strip().split()
-            mahina_day.append(name)
+            mahina_day_names.append(name)
     
     with open('mahina_calendar_day_info.txt','r') as f:
         for line in f:
             date, *info = line.strip().split()
             info = ' '.join(info)
-            mahina_day_info.append(info)
+            mahina_day_infos.append(info)
 
 # provided: discord bot
 class CalendarBot(discord.Client):
